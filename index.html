@@ -90,6 +90,12 @@
       filter:blur(40px); z-index:-1; animation:glowPulse 3s ease-in-out infinite;
     }
     @keyframes glowPulse { 0%,100%{opacity:.6;transform:scale(1);} 50%{opacity:1;transform:scale(1.05);} }
+
+    /* Group wraps two adjacent digits with no inner spacing */
+    .time-digit-group { display:flex; align-items:flex-end; }
+    /* Inside a group: no letter-spacing so digits sit flush against each other */
+    .time-digit-group .time-display { letter-spacing:0; }
+
     .time-display {
       font-family:'Orbitron',monospace;
       font-size:clamp(80px,16vw,200px);
@@ -97,6 +103,7 @@
       background:linear-gradient(135deg,#e8f4fd 0%,var(--accent-cyan) 40%,var(--accent-blue) 70%,#7986cb 100%);
       -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
       position:relative;
+      font-variant-numeric:tabular-nums; /* equal-width digits — prevents layout shift */
     }
     .time-display::after {
       content:attr(data-time); position:absolute; inset:0;
@@ -117,6 +124,18 @@
       margin:0 -4px; align-self:flex-end; padding-bottom:0.08em;
     }
     @keyframes colonBlink { 0%,100%{opacity:1;} 50%{opacity:.08;} }
+
+    /* ── Elegant digit-change animation ── */
+    @keyframes digitFadeUp {
+      from { opacity:1; transform:translateY(0)       scale(1);    }
+      to   { opacity:0; transform:translateY(-0.09em) scale(0.95); }
+    }
+    @keyframes digitFadeDown {
+      from { opacity:0; transform:translateY(0.09em)  scale(0.95); }
+      to   { opacity:1; transform:translateY(0)       scale(1);    }
+    }
+    .digit-exit  { animation:digitFadeUp   0.2s  ease-in  forwards; }
+    .digit-enter { animation:digitFadeDown 0.32s ease-out forwards; }
     .ampm {
       font-family:'Orbitron',monospace; font-size:clamp(22px,2.8vw,44px);
       font-weight:400; letter-spacing:.15em; color:var(--accent-blue); opacity:.8;
@@ -396,9 +415,15 @@
   <div class="time-section fade-in">
     <div class="time-wrapper">
       <div class="time-glow"></div>
-      <div class="time-display" id="timeHours" data-time="12">12</div>
+      <div class="time-digit-group">
+        <div class="time-display" id="timeH1" data-time="1">1</div>
+        <div class="time-display" id="timeH2" data-time="2">2</div>
+      </div>
       <div class="time-colon-sep" id="timeColon">:</div>
-      <div class="time-display" id="timeMinutes" data-time="00">00</div>
+      <div class="time-digit-group">
+        <div class="time-display" id="timeM1" data-time="0">0</div>
+        <div class="time-display" id="timeM2" data-time="0">0</div>
+      </div>
       <div class="ampm" id="ampmDisplay">AM</div>
     </div>
   </div>
@@ -524,7 +549,7 @@
 }());
 
 // ── Clock ────────────────────────────────────────────────────────────
-var lastSec = -1, lastMin = -1, lastDay = -1;
+var lastSec = -1, lastMin = -1, lastDay = -1, lastH12 = -1;
 var CIRC = 2 * Math.PI * 26;
 
 function updateClock() {
@@ -535,13 +560,31 @@ function updateClock() {
   var mStr = m < 10 ? '0' + m : '' + m;
 
   if (m !== lastMin) {
-    var hoursEl = document.getElementById('timeHours');
-    hoursEl.textContent = h12;
-    hoursEl.setAttribute('data-time', h12);
-    var minsEl = document.getElementById('timeMinutes');
-    minsEl.textContent = mStr;
-    minsEl.setAttribute('data-time', mStr);
+    var h12Str  = h12 < 10 ? '0' + h12 : '' + h12;
+
+    if (lastMin === -1) {
+      // First render — no animation, set all 4 digits directly
+      setDigit('timeH1', h12Str.charAt(0));
+      setDigit('timeH2', h12Str.charAt(1));
+      setDigit('timeM1', mStr.charAt(0));
+      setDigit('timeM2', mStr.charAt(1));
+    } else {
+      // Only animate the digit(s) that actually changed
+      var prevH = lastH12 < 10 ? '0' + lastH12 : '' + lastH12;
+      var prevM = lastMin  < 10 ? '0' + lastMin  : '' + lastMin;
+
+      if (h12Str.charAt(0) !== prevH.charAt(0))
+        animateTimeDigit(document.getElementById('timeH1'), h12Str.charAt(0));
+      if (h12Str.charAt(1) !== prevH.charAt(1))
+        animateTimeDigit(document.getElementById('timeH2'), h12Str.charAt(1));
+      if (mStr.charAt(0) !== prevM.charAt(0))
+        animateTimeDigit(document.getElementById('timeM1'), mStr.charAt(0));
+      if (mStr.charAt(1) !== prevM.charAt(1))
+        animateTimeDigit(document.getElementById('timeM2'), mStr.charAt(1));
+    }
+
     document.getElementById('ampmDisplay').textContent = ampm;
+    lastH12 = h12;
     lastMin = m;
   }
 
@@ -564,6 +607,25 @@ function updateClock() {
   }
 
   updateNightMode(h);
+}
+
+function setDigit(id, val) {
+  var el = document.getElementById(id);
+  el.textContent = val;
+  el.setAttribute('data-time', val);
+}
+
+function animateTimeDigit(el, newVal) {
+  el.classList.remove('digit-enter');
+  void el.offsetWidth; // force reflow to restart animation
+  el.classList.add('digit-exit');
+  setTimeout(function() {
+    el.textContent = newVal;
+    el.setAttribute('data-time', newVal);
+    el.classList.remove('digit-exit');
+    void el.offsetWidth;
+    el.classList.add('digit-enter');
+  }, 200);
 }
 
 function updateDate(now) {
