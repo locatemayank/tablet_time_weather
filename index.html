@@ -57,9 +57,9 @@
       transition:background 50s ease;
     }
 
-    /* Horizon glow — warm at sunrise/sunset, invisible otherwise */
+    /* Horizon glow */
     #horizonGlow {
-      position:fixed; bottom:0; left:0; right:0; height:35%;
+      position:fixed; bottom:0; left:0; right:0; height:40%;
       z-index:0; pointer-events:none;
       background:linear-gradient(to top, rgba(200,60,10,0.3), transparent);
       opacity:0; transition:opacity 40s ease, background 40s ease;
@@ -88,49 +88,31 @@
     }
     .aurora-band {
       position:absolute; left:-10%; width:120%; border-radius:50%;
-      filter:blur(55px); opacity:0.38; transition:background 25s ease;
+      filter:blur(55px); opacity:0.4; transition:background 25s ease;
     }
-    .ab1 { height:150px; top:-50px;
+    .ab1 { height:160px; top:-55px;
       background:linear-gradient(90deg,transparent,#003870,#005040,transparent);
       animation:auroraWave 13s ease-in-out infinite; }
-    .ab2 { height:130px; top:25px;
+    .ab2 { height:140px; top:30px;
       background:linear-gradient(90deg,transparent,#380060,#007058,transparent);
       animation:auroraWave 17s ease-in-out infinite reverse; animation-delay:-5s; }
-    .ab3 { height:110px; top:75px;
+    .ab3 { height:120px; top:85px;
       background:linear-gradient(90deg,transparent,#004060,#580070,transparent);
       animation:auroraWave 11s ease-in-out infinite; animation-delay:-8s; }
     @keyframes auroraWave {
       0%,100% { transform:translateX(-8%) scaleY(1);   }
-      50%      { transform:translateX(8%)  scaleY(1.5); }
+      50%      { transform:translateX(8%)  scaleY(1.6); }
     }
 
-    /* Celestial body (sun / moon) */
-    #celestial {
-      position:fixed; z-index:0; pointer-events:none;
-      transform:translate(-50%,-50%);
-      transition:left 58s linear, top 58s linear, opacity 20s ease;
-    }
-    .cel-core {
-      border-radius:50%;
-      transition:background 25s ease, box-shadow 25s ease, width 25s ease, height 25s ease;
-      position:relative; z-index:1;
-    }
-    .cel-halo {
-      position:absolute; top:50%; left:50%;
-      border-radius:50%; transform:translate(-50%,-50%);
-      filter:blur(28px);
-      transition:background 25s ease, width 25s ease, height 25s ease;
-    }
-
-    /* ── BG orbs ── */
+    /* ── BG orbs — more opaque for prominent hue ── */
     .bg-orb {
-      position:fixed; border-radius:50%; filter:blur(80px); opacity:.14;
+      position:fixed; border-radius:50%; filter:blur(80px); opacity:.25;
       animation:orbFloat 20s ease-in-out infinite; pointer-events:none; z-index:0;
-      transition:background 50s ease;
+      transition:background 50s ease, opacity 50s ease;
     }
-    .bg-orb-1 { width:600px;height:600px; background:radial-gradient(circle,#1a237e,transparent); top:-200px;left:-150px; }
-    .bg-orb-2 { width:500px;height:500px; background:radial-gradient(circle,#006064,transparent); bottom:-150px;right:-100px; animation-delay:-8s; }
-    .bg-orb-3 { width:400px;height:400px; background:radial-gradient(circle,#4a148c,transparent); top:40%;left:50%; transform:translate(-50%,-50%); animation-delay:-14s; }
+    .bg-orb-1 { width:700px;height:700px; background:radial-gradient(circle,#1a237e,transparent); top:-220px;left:-180px; }
+    .bg-orb-2 { width:600px;height:600px; background:radial-gradient(circle,#006064,transparent); bottom:-180px;right:-120px; animation-delay:-8s; }
+    .bg-orb-3 { width:500px;height:500px; background:radial-gradient(circle,#4a148c,transparent); top:40%;left:50%; transform:translate(-50%,-50%); animation-delay:-14s; }
     @keyframes orbFloat {
       0%,100%{transform:translate(0,0) scale(1);}
       33%{transform:translate(30px,-20px) scale(1.05);}
@@ -178,8 +160,7 @@
       font-weight:900; letter-spacing:.04em; line-height:.9;
       background:linear-gradient(135deg,#e8f4fd 0%,var(--accent-cyan) 40%,var(--accent-blue) 70%,#7986cb 100%);
       -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
-      position:relative;
-      font-variant-numeric:tabular-nums;
+      position:relative; font-variant-numeric:tabular-nums;
     }
     .time-display::after {
       content:attr(data-time); position:absolute; inset:0;
@@ -198,7 +179,6 @@
       margin:0 -4px; align-self:flex-end; padding-bottom:0.08em;
     }
     @keyframes colonBlink { 0%,100%{opacity:1;} 50%{opacity:.08;} }
-
     @keyframes digitFadeUp {
       from { opacity:1; transform:translateY(0) scale(1); }
       to   { opacity:0; transform:translateY(-0.09em) scale(0.95); }
@@ -209,7 +189,6 @@
     }
     .digit-exit  { animation:digitFadeUp   0.2s  ease-in  forwards; }
     .digit-enter { animation:digitFadeDown 0.32s ease-out forwards; }
-
     .ampm {
       font-family:'Orbitron',monospace; font-size:clamp(22px,2.8vw,44px);
       font-weight:400; letter-spacing:.15em; color:var(--accent-blue); opacity:.8;
@@ -258,11 +237,7 @@
       opacity:.5;
     }
     .info-sep { width:1px; flex-shrink:0; background:rgba(255,255,255,.07); margin:12px 0; }
-    .info-col {
-      display:flex; flex-direction:column;
-      align-items:center; justify-content:center;
-      padding:14px 10px; flex:1; gap:3px;
-    }
+    .info-col { display:flex; flex-direction:column; align-items:center; justify-content:center; padding:14px 10px; flex:1; gap:3px; }
     .col-label { font-size:9px; font-weight:600; letter-spacing:.22em; text-transform:uppercase; color:var(--text-dim); margin-bottom:2px; }
 
     .col-temp { flex:1.8; border-left:3px solid rgba(255,183,77,.25); }
@@ -272,10 +247,7 @@
       font-weight:700; color:var(--accent-warm); line-height:1;
       text-shadow:0 0 30px rgba(255,183,77,.5);
     }
-    .temp-unit {
-      font-family:'Orbitron',monospace; font-size:clamp(26px,3vw,42px);
-      font-weight:400; color:var(--accent-warm); opacity:.7; margin-top:10px;
-    }
+    .temp-unit { font-family:'Orbitron',monospace; font-size:clamp(26px,3vw,42px); font-weight:400; color:var(--accent-warm); opacity:.7; margin-top:10px; }
     .feels-badge { font-size:14px; color:var(--text-secondary); letter-spacing:.04em; }
     .feels-badge span { color:var(--accent-warm); font-weight:600; }
     @keyframes tempFlash {
@@ -286,11 +258,7 @@
     .temp-flash { animation:tempFlash 1s ease-out; }
 
     .col-cond { flex:1.6; }
-    .cond-icon-img {
-      width:88px; height:88px; object-fit:contain;
-      animation:iconFloat 4s ease-in-out infinite;
-      filter:drop-shadow(0 4px 16px rgba(0,0,0,0.5));
-    }
+    .cond-icon-img { width:88px; height:88px; object-fit:contain; animation:iconFloat 4s ease-in-out infinite; filter:drop-shadow(0 4px 16px rgba(0,0,0,0.5)); }
     @keyframes iconFloat { 0%,100%{transform:translateY(0);} 50%{transform:translateY(-7px);} }
     .cond-label { font-size:clamp(14px,1.6vw,20px); font-weight:500; color:var(--text-primary); text-align:center; }
     .cond-sub   { font-size:13px; color:var(--text-secondary); text-align:center; }
@@ -323,15 +291,8 @@
     .mp-aqi-haz  { background:rgba(188,0,0,.2); border:1px solid rgba(255,0,0,.3); color:#ff5252; }
 
     .col-date { flex:1.5; border-right:3px solid rgba(79,195,247,.2); }
-    .date-mo-sm {
-      font-family:'Orbitron',monospace; font-size:clamp(11px,1.3vw,17px);
-      font-weight:400; letter-spacing:.22em; color:var(--accent-blue); opacity:.8; text-transform:uppercase;
-    }
-    .date-num-lg {
-      font-family:'Orbitron',monospace; font-size:clamp(58px,7.5vw,102px);
-      font-weight:700; color:var(--text-primary); line-height:1;
-      text-shadow:0 0 30px rgba(79,195,247,.4);
-    }
+    .date-mo-sm { font-family:'Orbitron',monospace; font-size:clamp(11px,1.3vw,17px); font-weight:400; letter-spacing:.22em; color:var(--accent-blue); opacity:.8; text-transform:uppercase; }
+    .date-num-lg { font-family:'Orbitron',monospace; font-size:clamp(58px,7.5vw,102px); font-weight:700; color:var(--text-primary); line-height:1; text-shadow:0 0 30px rgba(79,195,247,.4); }
     .date-ordinal { font-size:.38em; vertical-align:super; color:var(--accent-blue); font-weight:400; }
     .date-dn { font-size:14px; color:var(--text-secondary); letter-spacing:.06em; }
     .location-pill {
@@ -369,10 +330,7 @@
     .brief-text strong { color:var(--text-primary); font-weight:600; }
 
     /* ── STATUS BAR ── */
-    .status-bar {
-      display:flex; align-items:center; justify-content:space-between;
-      width:100%; margin-top:8px; padding:0 4px;
-    }
+    .status-bar { display:flex; align-items:center; justify-content:space-between; width:100%; margin-top:8px; padding:0 4px; }
     .status-text { font-size:9px; font-weight:500; letter-spacing:.15em; color:var(--text-dim); text-transform:uppercase; display:flex; align-items:center; gap:7px; }
     .status-dot { width:5px; height:5px; background:var(--accent-green); border-radius:50%; box-shadow:0 0 7px var(--accent-green); animation:statusPulse 2s ease-in-out infinite; }
     @keyframes statusPulse { 0%,100%{opacity:1;box-shadow:0 0 8px var(--accent-green);} 50%{opacity:.4;box-shadow:0 0 3px var(--accent-green);} }
@@ -421,7 +379,6 @@
 </head>
 <body>
 
-<!-- Dynamic sky layers (z-index -1 to 0, behind all content) -->
 <div id="bgSky"></div>
 <div id="horizonGlow"></div>
 <div id="starField"></div>
@@ -429,10 +386,6 @@
   <div class="aurora-band ab1"></div>
   <div class="aurora-band ab2"></div>
   <div class="aurora-band ab3"></div>
-</div>
-<div class="celestial" id="celestial">
-  <div class="cel-core" id="celCore"></div>
-  <div class="cel-halo" id="celHalo"></div>
 </div>
 
 <div class="night-banner">&#127769; Night Mode &mdash; Tap anywhere to wake</div>
@@ -540,86 +493,86 @@
 'use strict';
 
 // ══════════════════════════════════════════════════════════════════════
-// DYNAMIC SKY SYSTEM
+// DYNAMIC SKY SYSTEM — richer hue, no celestial object
 // ══════════════════════════════════════════════════════════════════════
 
 var SKY_THEMES = {
   midnight: {
-    bodyBg:'#02030a',
-    skyBg:'radial-gradient(ellipse at 35% 20%, #080c20 0%, #02030a 100%)',
-    orb:['#0a1045','#0a0528','#04092a'],
-    auroraOp:0.65,
-    auroraC:['linear-gradient(90deg,transparent,#003870,#005048,transparent)',
-             'linear-gradient(90deg,transparent,#380062,#007055,transparent)',
-             'linear-gradient(90deg,transparent,#00245a,#580068,transparent)'],
+    bodyBg:'#02030c',
+    skyBg:'radial-gradient(ellipse at 35% 20%, #0d1535 0%, #03040e 100%)',
+    orb:['#0f1660','#0c062e','#06102e'],
+    auroraOp:0.72,
+    auroraC:['linear-gradient(90deg,transparent,#004090,#006055,transparent)',
+             'linear-gradient(90deg,transparent,#480075,#008060,transparent)',
+             'linear-gradient(90deg,transparent,#002870,#700080,transparent)'],
     starOp:1.0, horizonOp:0,
-    horizonBg:'linear-gradient(to top,rgba(10,20,60,0.2),transparent)'
+    horizonBg:'linear-gradient(to top,rgba(10,20,70,0.25),transparent)'
   },
   predawn: {
-    bodyBg:'#03030c',
-    skyBg:'radial-gradient(ellipse at 20% 80%, #140a22 0%, #03030c 100%)',
-    orb:['#1a0840','#28063a','#0a082a'],
-    auroraOp:0.45,
-    auroraC:['linear-gradient(90deg,transparent,#280062,#003858,transparent)',
-             'linear-gradient(90deg,transparent,#500080,#006040,transparent)',
-             'linear-gradient(90deg,transparent,#200058,#580028,transparent)'],
-    starOp:0.55, horizonOp:0.12,
-    horizonBg:'linear-gradient(to top,rgba(80,20,100,0.2),rgba(20,10,60,0.1),transparent)'
+    bodyBg:'#03030f',
+    skyBg:'radial-gradient(ellipse at 22% 85%, #1e1030 0%, #050412 100%)',
+    orb:['#220a55','#380848','#0e0a34'],
+    auroraOp:0.52,
+    auroraC:['linear-gradient(90deg,transparent,#380075,#004068,transparent)',
+             'linear-gradient(90deg,transparent,#680095,#007055,transparent)',
+             'linear-gradient(90deg,transparent,#280068,#700035,transparent)'],
+    starOp:0.6, horizonOp:0.18,
+    horizonBg:'linear-gradient(to top,rgba(100,25,120,0.28),rgba(25,12,70,0.12),transparent)'
   },
   sunrise: {
-    bodyBg:'#040208',
-    skyBg:'radial-gradient(ellipse at 85% 100%, #2a0d02 0%, #040308 70%)',
-    orb:['#401500','#200022','#00182a'],
+    bodyBg:'#05030a',
+    skyBg:'radial-gradient(ellipse at 88% 100%, #3e1605 0%, #060409 70%)',
+    orb:['#5a1e00','#2e0030','#001e38'],
     auroraOp:0,
-    auroraC:['linear-gradient(90deg,transparent,#602000,#300040,transparent)',
-             'linear-gradient(90deg,transparent,#401000,#200050,transparent)',
-             'linear-gradient(90deg,transparent,#500800,#300030,transparent)'],
-    starOp:0.05, horizonOp:0.45,
-    horizonBg:'linear-gradient(to top,rgba(220,80,10,0.35),rgba(180,40,80,0.15),transparent)'
+    auroraC:['linear-gradient(90deg,transparent,#702500,#380050,transparent)',
+             'linear-gradient(90deg,transparent,#501500,#280060,transparent)',
+             'linear-gradient(90deg,transparent,#601000,#380038,transparent)'],
+    starOp:0.05, horizonOp:0.55,
+    horizonBg:'linear-gradient(to top,rgba(240,90,12,0.42),rgba(200,45,90,0.2),rgba(100,10,140,0.08),transparent)'
   },
   day: {
-    bodyBg:'#020508',
-    skyBg:'radial-gradient(ellipse at 50% 0%, #081428 0%, #020508 100%)',
-    orb:['#004060','#003030','#180048'],
+    bodyBg:'#020609',
+    skyBg:'radial-gradient(ellipse at 50% 0%, #0c1e3c 0%, #020609 100%)',
+    orb:['#005070','#004040','#200060'],
     auroraOp:0,
-    auroraC:['linear-gradient(90deg,transparent,#003060,#006040,transparent)',
-             'linear-gradient(90deg,transparent,#004080,#005040,transparent)',
-             'linear-gradient(90deg,transparent,#003050,#004060,transparent)'],
+    auroraC:['linear-gradient(90deg,transparent,#003868,#006848,transparent)',
+             'linear-gradient(90deg,transparent,#004888,#005848,transparent)',
+             'linear-gradient(90deg,transparent,#003858,#004868,transparent)'],
     starOp:0, horizonOp:0,
-    horizonBg:'linear-gradient(to top,rgba(0,40,80,0.1),transparent)'
+    horizonBg:'linear-gradient(to top,rgba(0,50,90,0.12),transparent)'
   },
   sunset: {
-    bodyBg:'#050206',
-    skyBg:'radial-gradient(ellipse at 88% 100%, #340900 0%, #060408 80%)',
-    orb:['#4a1200','#380022','#0c003c'],
+    bodyBg:'#060307',
+    skyBg:'radial-gradient(ellipse at 90% 100%, #4a1000 0%, #080408 80%)',
+    orb:['#601800','#4a0028','#10004e'],
     auroraOp:0,
-    auroraC:['linear-gradient(90deg,transparent,#801800,#300048,transparent)',
-             'linear-gradient(90deg,transparent,#601000,#400030,transparent)',
-             'linear-gradient(90deg,transparent,#701000,#200040,transparent)'],
-    starOp:0.02, horizonOp:0.5,
-    horizonBg:'linear-gradient(to top,rgba(240,70,10,0.4),rgba(200,20,80,0.2),rgba(80,0,120,0.1),transparent)'
+    auroraC:['linear-gradient(90deg,transparent,#902000,#380058,transparent)',
+             'linear-gradient(90deg,transparent,#701500,#500038,transparent)',
+             'linear-gradient(90deg,transparent,#801500,#280050,transparent)'],
+    starOp:0.03, horizonOp:0.62,
+    horizonBg:'linear-gradient(to top,rgba(255,75,10,0.48),rgba(220,25,90,0.25),rgba(100,0,140,0.12),transparent)'
   },
   dusk: {
-    bodyBg:'#030308',
-    skyBg:'radial-gradient(ellipse at 72% 90%, #1a082a 0%, #030408 80%)',
-    orb:['#280642','#1a0430','#060428'],
-    auroraOp:0.3,
-    auroraC:['linear-gradient(90deg,transparent,#5a0882,#100060,transparent)',
-             'linear-gradient(90deg,transparent,#400062,#800022,transparent)',
-             'linear-gradient(90deg,transparent,#300072,#600050,transparent)'],
-    starOp:0.35, horizonOp:0.2,
-    horizonBg:'linear-gradient(to top,rgba(150,30,100,0.22),rgba(80,10,60,0.1),transparent)'
+    bodyBg:'#03030a',
+    skyBg:'radial-gradient(ellipse at 74% 92%, #22083c 0%, #040409 80%)',
+    orb:['#380858','#240540','#080430'],
+    auroraOp:0.38,
+    auroraC:['linear-gradient(90deg,transparent,#740a98,#140075,transparent)',
+             'linear-gradient(90deg,transparent,#580078,#a00028,transparent)',
+             'linear-gradient(90deg,transparent,#42008a,#780060,transparent)'],
+    starOp:0.42, horizonOp:0.28,
+    horizonBg:'linear-gradient(to top,rgba(180,35,120,0.3),rgba(100,12,70,0.12),transparent)'
   },
   night: {
-    bodyBg:'#030308',
-    skyBg:'radial-gradient(ellipse at 40% 25%, #0e0822 0%, #030308 100%)',
-    orb:['#180840','#003042','#240036'],
-    auroraOp:0.55,
-    auroraC:['linear-gradient(90deg,transparent,#003882,#006052,transparent)',
-             'linear-gradient(90deg,transparent,#38006a,#008062,transparent)',
-             'linear-gradient(90deg,transparent,#002062,#600082,transparent)'],
-    starOp:0.85, horizonOp:0,
-    horizonBg:'linear-gradient(to top,rgba(10,15,40,0.15),transparent)'
+    bodyBg:'#03030a',
+    skyBg:'radial-gradient(ellipse at 42% 25%, #151030 0%, #030309 100%)',
+    orb:['#200a52','#003c50','#300042'],
+    auroraOp:0.62,
+    auroraC:['linear-gradient(90deg,transparent,#00489a,#007865,transparent)',
+             'linear-gradient(90deg,transparent,#4a0082,#009878,transparent)',
+             'linear-gradient(90deg,transparent,#00287a,#780098,transparent)'],
+    starOp:0.9, horizonOp:0,
+    horizonBg:'linear-gradient(to top,rgba(12,18,50,0.18),transparent)'
   }
 };
 
@@ -646,15 +599,12 @@ function applySkyTheme() {
   var sky = document.getElementById('bgSky');
   if (sky) sky.style.background = t.skyBg;
 
-  // Horizon glow
   var hg = document.getElementById('horizonGlow');
   if (hg) { hg.style.opacity = t.horizonOp; hg.style.background = t.horizonBg; }
 
-  // Stars
   var sf = document.getElementById('starField');
   if (sf) sf.style.opacity = t.starOp;
 
-  // Aurora
   var aw = document.getElementById('auroraWrap');
   if (aw) {
     aw.style.opacity = t.auroraOp;
@@ -664,64 +614,9 @@ function applySkyTheme() {
     }
   }
 
-  // Orbs
   var orbs = document.querySelectorAll('.bg-orb');
   for (var i = 0; i < orbs.length && i < t.orb.length; i++) {
     orbs[i].style.background = 'radial-gradient(circle,' + t.orb[i] + ',transparent)';
-  }
-}
-
-// ── Celestial body (sun/moon arc) ─────────────────────────────────────
-function getCelestialState() {
-  var now = new Date();
-  var t = now.getHours() + now.getMinutes() / 60;
-
-  if (t >= 6 && t < 20) {
-    // Sun: 6am → rises left, 1pm → peaks top-center, 8pm → sets right
-    var p = (t - 6) / 14;
-    var ax = 8 + p * 84;
-    var ay = 88 - 72 * Math.sin(Math.PI * p);
-    var noon = 1 - Math.abs(p - 0.5) * 2; // 0=horizon, 1=noon
-    var g2 = Math.round(160 + noon * 88), b2 = Math.round(noon * 100);
-    var col = 'rgb(255,' + g2 + ',' + b2 + ')';
-    var glowA = (0.42 - (1-noon)*0.18).toFixed(2);
-    var glow = 'rgba(255,' + g2 + ',' + Math.round(b2/2) + ',' + glowA + ')';
-    return {x:ax, y:ay, type:'sun', col:col, glow:glow, size:Math.round(44 + noon*14)};
-  } else {
-    // Moon: 8pm → rises left, 2am → peaks top-center, 8am → sets right
-    var mt = t >= 20 ? t - 20 : t + 24 - 20;
-    var p2 = Math.min(mt / 12, 1);
-    var ax2 = 8 + p2 * 84;
-    var ay2 = 88 - 58 * Math.sin(Math.PI * p2);
-    var hi = Math.sin(Math.PI * p2);
-    var r2 = Math.round(178 + hi * 70), g3 = Math.round(210 + hi * 40);
-    var col2 = 'rgb(' + r2 + ',' + g3 + ',255)';
-    var glow2 = 'rgba(' + r2 + ',' + g3 + ',255,' + (0.13 + hi*0.09).toFixed(2) + ')';
-    return {x:ax2, y:ay2, type:'moon', col:col2, glow:glow2, size:42};
-  }
-}
-
-function updateCelestial() {
-  var s = getCelestialState();
-  var cel = document.getElementById('celestial');
-  if (!cel) return;
-  cel.style.left = s.x + 'vw';
-  cel.style.top  = s.y + 'vh';
-
-  var core = document.getElementById('celCore');
-  var halo = document.getElementById('celHalo');
-  if (core) {
-    core.style.width  = s.size + 'px';
-    core.style.height = s.size + 'px';
-    var inner = s.type === 'sun' ? '#fffef0' : '#ffffff';
-    core.style.background = 'radial-gradient(circle at 38% 38%, ' + inner + ' 0%, ' + s.col + ' 100%)';
-    core.style.boxShadow  = '0 0 ' + s.size + 'px ' + Math.round(s.size/3) + 'px ' + s.glow;
-  }
-  if (halo) {
-    var hs = s.size * 5;
-    halo.style.width  = hs + 'px';
-    halo.style.height = hs + 'px';
-    halo.style.background = 'radial-gradient(circle, ' + s.glow + ' 0%, transparent 65%)';
   }
 }
 
@@ -729,29 +624,25 @@ function updateCelestial() {
 function createStars() {
   var sf = document.getElementById('starField');
   if (!sf) return;
-  for (var i = 0; i < 75; i++) {
+  for (var i = 0; i < 80; i++) {
     var s = document.createElement('div');
     s.className = 'star-dot';
     s.style.left = (Math.random() * 100) + 'vw';
-    s.style.top  = (Math.random() * 72) + 'vh';
-    var sz = (Math.random() * 2.2 + 0.4).toFixed(1);
+    s.style.top  = (Math.random() * 75) + 'vh';
+    var sz = (Math.random() * 2.4 + 0.4).toFixed(1);
     s.style.width = s.style.height = sz + 'px';
-    s.style.setProperty('--mx',  (Math.random() * 0.55 + 0.3).toFixed(2));
-    s.style.setProperty('--sd',  (Math.random() * 3 + 1.5).toFixed(1) + 's');
-    s.style.setProperty('--dl',  (Math.random() * 6).toFixed(1) + 's');
-    // Slight color tint: blue-white to warm-white
+    s.style.setProperty('--mx', (Math.random() * 0.6 + 0.3).toFixed(2));
+    s.style.setProperty('--sd', (Math.random() * 3 + 1.5).toFixed(1) + 's');
+    s.style.setProperty('--dl', (Math.random() * 6).toFixed(1) + 's');
     var tint = Math.random();
-    s.style.background = tint > 0.7
-      ? 'rgba(220,230,255,1)' : (tint > 0.4 ? '#fff' : 'rgba(255,248,220,1)');
+    s.style.background = tint > 0.7 ? 'rgba(220,232,255,1)' : (tint > 0.4 ? '#fff' : 'rgba(255,248,220,1)');
     sf.appendChild(s);
   }
 }
 
-// ── Init sky on load ──────────────────────────────────────────────────
 function initSky() {
   createStars();
   applySkyTheme();
-  updateCelestial();
 }
 
 // ══════════════════════════════════════════════════════════════════════
@@ -802,9 +693,7 @@ function updateClock() {
     }
     document.getElementById('ampmDisplay').textContent = ampm;
     lastH12 = h12; lastMin = m;
-    // Update sky + celestial on every minute
     applySkyTheme();
-    updateCelestial();
   }
 
   var days = ['SUNDAY','MONDAY','TUESDAY','WEDNESDAY','THURSDAY','FRIDAY','SATURDAY'];
@@ -898,11 +787,7 @@ var WMO = {
 };
 
 var ICON_BASE = 'https://cdn.jsdelivr.net/gh/basmilius/weather-icons@dev/production/fill/svg/';
-
-function getIconUrl(wmo, isDay) {
-  if (!wmo) return '';
-  return ICON_BASE + (isDay ? (wmo.d||'clear-day') : (wmo.n||'clear-night')) + '.svg';
-}
+function getIconUrl(wmo, isDay) { if (!wmo) return ''; return ICON_BASE + (isDay ? (wmo.d||'clear-day') : (wmo.n||'clear-night')) + '.svg'; }
 function isDayTime() { var h = new Date().getHours(); return h >= 6 && h < 21; }
 function getWmoCode(obj) { return (obj.weather_code !== undefined && obj.weather_code !== null) ? obj.weather_code : obj.weathercode; }
 
@@ -931,18 +816,15 @@ function fetchWeather() {
     var tempC=Math.round(cur.temperature_2m), feelsC=Math.round(cur.apparent_temperature);
     var code=getWmoCode(cur), humid=cur.relative_humidity_2m, wind=Math.round(cur.wind_speed_10m);
     var wmo=WMO[code]||{l:'Unknown',d:'clear-day',n:'clear-night'};
-
     var tEl=document.getElementById('tempValue');
     if (prevTemp!==null && prevTemp!==tempC) { animateNumber(tEl,prevTemp,tempC,800); tEl.classList.remove('temp-flash'); void tEl.offsetWidth; tEl.classList.add('temp-flash'); }
     else { tEl.textContent=tempC; }
     prevTemp=tempC;
-
     document.getElementById('feelsBadge').innerHTML='Feels <span>'+feelsC+'&deg;</span>';
     var iconEl=document.getElementById('weatherIcon'); iconEl.src=getIconUrl(wmo,isDayTime()); iconEl.alt=wmo.l;
     document.getElementById('weatherCondition').textContent=wmo.l;
     document.getElementById('tempMeta').innerHTML='Humidity <strong style="color:var(--accent-warm)">'+humid+'%</strong>';
     document.getElementById('windVal').textContent=wind+' km/h';
-
     if (daily) {
       document.getElementById('hlHigh').textContent='\u2191 '+Math.round(daily.temperature_2m_max[0])+'\u00b0';
       document.getElementById('hlLow').textContent ='\u2193 '+Math.round(daily.temperature_2m_min[0])+'\u00b0';
@@ -962,7 +844,7 @@ function setUV(uv) {
   var el=document.getElementById('uvPill');
   if (uv==null){el.textContent='\u2600 UV --';el.className='metric-pill mp-uv';return;}
   var v=Math.round(uv),cls,label;
-  if (v>=11){cls='mp-uv-ext';label='Extreme';}else if(v>=8){cls='mp-uv-vhigh';label='Very High';}
+  if(v>=11){cls='mp-uv-ext';label='Extreme';}else if(v>=8){cls='mp-uv-vhigh';label='Very High';}
   else if(v>=6){cls='mp-uv-high';label='High';}else if(v>=3){cls='mp-uv-mod';label='Moderate';}
   else{cls='mp-uv-low';label='Low';}
   el.textContent='\u2600 UV '+v+' \u00b7 '+label; el.className='metric-pill '+cls;
@@ -970,7 +852,7 @@ function setUV(uv) {
 
 function setAQI(aqi) {
   var el=document.getElementById('aqiPill');
-  if (aqi==null){el.textContent='AQI --';el.className='metric-pill mp-aqi';return;}
+  if(aqi==null){el.textContent='AQI --';el.className='metric-pill mp-aqi';return;}
   var v=Math.round(aqi),cls,label;
   if(v>300){cls='mp-aqi-haz';label='Hazardous';}else if(v>200){cls='mp-aqi-vun';label='Very Unhealthy';}
   else if(v>150){cls='mp-aqi-un';label='Unhealthy';}else if(v>100){cls='mp-aqi-usg';label='Unhealthy\u00b7SG';}
@@ -993,15 +875,13 @@ function generateForecastSummary(daily) {
   var codes=daily.weather_code||daily.weathercode||[], highs=daily.temperature_2m_max||[];
   var today=new Date(), dayNames=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
   function dayLabel(o){if(o===1)return'tomorrow';var d=new Date(today);d.setDate(d.getDate()+o);return dayNames[d.getDay()];}
-
   var todayHi=Math.round(highs[0]||0),peakVal=todayHi,peakIdx=0,troughVal=todayHi,troughIdx=0;
   for(var i=1;i<highs.length;i++){var v=Math.round(highs[i]);if(v>peakVal){peakVal=v;peakIdx=i;}if(v<troughVal){troughVal=v;troughIdx=i;}}
-  var endHi=Math.round(highs[highs.length-1]||todayHi), trend=endHi-todayHi, days=highs.length-1;
+  var endHi=Math.round(highs[highs.length-1]||todayHi),trend=endHi-todayHi,days=highs.length-1;
   var t1,i1;
   if(Math.abs(trend)<2){i1='&#127777;&#65039;';t1='Temperatures <strong>steady</strong> around '+todayHi+'&deg;C this week';}
   else if(trend>0){i1='&#128200;';t1='Warming <strong>+'+trend+'&deg;</strong> over '+days+' days';if(peakIdx>0&&peakIdx<highs.length-1)t1+=' &mdash; peaks at <strong>'+peakVal+'&deg;</strong> '+dayLabel(peakIdx);}
   else{i1='&#128201;';t1='Cooling <strong>'+trend+'&deg;</strong> over '+days+' days';if(troughIdx>0&&troughIdx<highs.length-1)t1+=' &mdash; low of <strong>'+troughVal+'&deg;</strong> '+dayLabel(troughIdx);}
-
   var rainDays=[],stormDays=[],snowDays=[];
   for(var i=1;i<codes.length;i++){var code=codes[i]||0;if(code>=95)stormDays.push(dayLabel(i));else if(code>=71&&code<=77)snowDays.push(dayLabel(i));else if(code>=51)rainDays.push(dayLabel(i));}
   var t2,i2;
@@ -1011,7 +891,6 @@ function generateForecastSummary(daily) {
   else if(rainDays.length===2){i2='&#127782;&#65039;';t2='<strong>Rain likely</strong> '+rainDays[0]+' and '+rainDays[1];}
   else if(rainDays.length===1){i2='&#127782;&#65039;';t2='Rain possible <strong>'+rainDays[0]+'</strong> &mdash; dry otherwise';}
   else{i2='&#9728;&#65039;';t2='<strong>No rain</strong> expected &mdash; dry conditions for '+days+' days';}
-
   var allHi=[],clearCnt=0;
   for(var i=0;i<highs.length;i++)allHi.push(Math.round(highs[i]));
   for(var i=1;i<codes.length;i++){if((codes[i]||0)<=1)clearCnt++;}
@@ -1023,7 +902,6 @@ function generateForecastSummary(daily) {
   else if(wetDays>=3){i3='&#127746;';t3='Unsettled stretch &mdash; highs mostly <strong>'+minHi+'&ndash;'+maxHi+'&deg;C</strong>';}
   else if(spread<3){i3='&#9925;';t3='Consistent conditions &mdash; highs near <strong>'+Math.round((minHi+maxHi)/2)+'&deg;C</strong>';}
   else{i3='&#9925;';t3='Mixed week ahead &mdash; highs <strong>'+minHi+'&deg; to '+maxHi+'&deg;C</strong>';}
-
   return [{icon:i1,text:t1},{icon:i2,text:t2},{icon:i3,text:t3}];
 }
 
