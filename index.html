@@ -80,6 +80,43 @@
       50%    { opacity:calc(var(--mx)*0.15); transform:scale(0.5); }
     }
 
+    /* Day field — animated clouds and birds (day/sunrise/sunset only) */
+    #dayField {
+      position:fixed; inset:0; z-index:0; pointer-events:none;
+      opacity:0; transition:opacity 40s ease;
+    }
+    .cloud {
+      position:absolute; border-radius:50%;
+      filter:blur(var(--cb,25px));
+      background:rgba(220,235,255,var(--ca,0.07));
+      animation:cloudDrift var(--cd,130s) linear infinite;
+      animation-delay:var(--cdelay,0s);
+    }
+    @keyframes cloudDrift {
+      from { transform:translateX(115vw); }
+      to   { transform:translateX(-130vw); }
+    }
+    .bird-group {
+      position:absolute; display:flex; align-items:flex-end;
+      animation:birdFly var(--bd,70s) linear infinite;
+      animation-delay:var(--bdelay,0s);
+    }
+    @keyframes birdFly {
+      0%   { transform:translateX(112vw) translateY(0); }
+      30%  { transform:translateX(60vw)  translateY(-2.5vh); }
+      70%  { transform:translateX(8vw)   translateY(1.5vh); }
+      100% { transform:translateX(-115vw) translateY(0); }
+    }
+    .bird {
+      display:inline-block; flex-shrink:0;
+      animation:birdFlap var(--bf,0.75s) ease-in-out infinite alternate;
+      animation-delay:var(--bfd,0s);
+    }
+    @keyframes birdFlap {
+      from { transform:scaleY(1);     }
+      to   { transform:scaleY(-0.22); }
+    }
+
     /* Aurora borealis */
     #auroraWrap {
       position:fixed; top:0; left:0; right:0; height:52%;
@@ -382,6 +419,7 @@
 <div id="bgSky"></div>
 <div id="horizonGlow"></div>
 <div id="starField"></div>
+<div id="dayField"></div>
 <div id="auroraWrap">
   <div class="aurora-band ab1"></div>
   <div class="aurora-band ab2"></div>
@@ -505,7 +543,7 @@ var SKY_THEMES = {
     auroraC:['linear-gradient(90deg,transparent,#004090,#006055,transparent)',
              'linear-gradient(90deg,transparent,#480075,#008060,transparent)',
              'linear-gradient(90deg,transparent,#002870,#700080,transparent)'],
-    starOp:1.0, horizonOp:0,
+    starOp:1.0, dayFieldOp:0, horizonOp:0,
     horizonBg:'linear-gradient(to top,rgba(10,20,70,0.25),transparent)'
   },
   predawn: {
@@ -516,7 +554,7 @@ var SKY_THEMES = {
     auroraC:['linear-gradient(90deg,transparent,#380075,#004068,transparent)',
              'linear-gradient(90deg,transparent,#680095,#007055,transparent)',
              'linear-gradient(90deg,transparent,#280068,#700035,transparent)'],
-    starOp:0.6, horizonOp:0.18,
+    starOp:0.6, dayFieldOp:0, horizonOp:0.18,
     horizonBg:'linear-gradient(to top,rgba(100,25,120,0.28),rgba(25,12,70,0.12),transparent)'
   },
   sunrise: {
@@ -527,7 +565,7 @@ var SKY_THEMES = {
     auroraC:['linear-gradient(90deg,transparent,#702500,#380050,transparent)',
              'linear-gradient(90deg,transparent,#501500,#280060,transparent)',
              'linear-gradient(90deg,transparent,#601000,#380038,transparent)'],
-    starOp:0.05, horizonOp:0.55,
+    starOp:0.05, dayFieldOp:0.35, horizonOp:0.55,
     horizonBg:'linear-gradient(to top,rgba(240,90,12,0.42),rgba(200,45,90,0.2),rgba(100,10,140,0.08),transparent)'
   },
   day: {
@@ -538,7 +576,7 @@ var SKY_THEMES = {
     auroraC:['linear-gradient(90deg,transparent,#003868,#006848,transparent)',
              'linear-gradient(90deg,transparent,#004888,#005848,transparent)',
              'linear-gradient(90deg,transparent,#003858,#004868,transparent)'],
-    starOp:0, horizonOp:0,
+    starOp:0, dayFieldOp:1.0, horizonOp:0,
     horizonBg:'linear-gradient(to top,rgba(0,50,90,0.12),transparent)'
   },
   sunset: {
@@ -549,7 +587,7 @@ var SKY_THEMES = {
     auroraC:['linear-gradient(90deg,transparent,#902000,#380058,transparent)',
              'linear-gradient(90deg,transparent,#701500,#500038,transparent)',
              'linear-gradient(90deg,transparent,#801500,#280050,transparent)'],
-    starOp:0.03, horizonOp:0.62,
+    starOp:0.03, dayFieldOp:0.25, horizonOp:0.62,
     horizonBg:'linear-gradient(to top,rgba(255,75,10,0.48),rgba(220,25,90,0.25),rgba(100,0,140,0.12),transparent)'
   },
   dusk: {
@@ -560,7 +598,7 @@ var SKY_THEMES = {
     auroraC:['linear-gradient(90deg,transparent,#740a98,#140075,transparent)',
              'linear-gradient(90deg,transparent,#580078,#a00028,transparent)',
              'linear-gradient(90deg,transparent,#42008a,#780060,transparent)'],
-    starOp:0.42, horizonOp:0.28,
+    starOp:0.42, dayFieldOp:0, horizonOp:0.28,
     horizonBg:'linear-gradient(to top,rgba(180,35,120,0.3),rgba(100,12,70,0.12),transparent)'
   },
   night: {
@@ -571,7 +609,7 @@ var SKY_THEMES = {
     auroraC:['linear-gradient(90deg,transparent,#00489a,#007865,transparent)',
              'linear-gradient(90deg,transparent,#4a0082,#009878,transparent)',
              'linear-gradient(90deg,transparent,#00287a,#780098,transparent)'],
-    starOp:0.9, horizonOp:0,
+    starOp:0.9, dayFieldOp:0, horizonOp:0,
     horizonBg:'linear-gradient(to top,rgba(12,18,50,0.18),transparent)'
   }
 };
@@ -604,6 +642,9 @@ function applySkyTheme() {
 
   var sf = document.getElementById('starField');
   if (sf) sf.style.opacity = t.starOp;
+
+  var df = document.getElementById('dayField');
+  if (df) df.style.opacity = (t.dayFieldOp !== undefined ? t.dayFieldOp : 0);
 
   var aw = document.getElementById('auroraWrap');
   if (aw) {
@@ -640,8 +681,79 @@ function createStars() {
   }
 }
 
+// ── Day field: clouds + birds (daytime only) ─────────────────────────
+function createDayField() {
+  var df = document.getElementById('dayField');
+  if (!df) return;
+
+  // Clouds — two layers: big puffy + wispy high-altitude
+  var clouds = [
+    {w:360,h:85,y:8, blur:32,alpha:0.062,dur:155,delay:-30},
+    {w:200,h:62,y:9, blur:18,alpha:0.042,dur:155,delay:-30},  // companion
+    {w:290,h:78,y:18,blur:28,alpha:0.055,dur:135,delay:-75},
+    {w:170,h:52,y:19,blur:16,alpha:0.038,dur:135,delay:-75},  // companion
+    {w:400,h:90,y:30,blur:36,alpha:0.052,dur:195,delay:-15},
+    {w:230,h:68,y:31,blur:22,alpha:0.036,dur:195,delay:-15},  // companion
+    {w:310,h:82,y:12,blur:30,alpha:0.058,dur:170,delay:-100},
+    // Wispy high clouds
+    {w:520,h:38,y:4, blur:48,alpha:0.030,dur:230,delay:-140},
+    {w:640,h:32,y:2, blur:55,alpha:0.025,dur:260,delay:-60},
+    {w:400,h:28,y:6, blur:42,alpha:0.028,dur:200,delay:-185},
+  ];
+
+  for (var ci = 0; ci < clouds.length; ci++) {
+    var cc = clouds[ci];
+    var c = document.createElement('div');
+    c.className = 'cloud';
+    c.style.width  = cc.w + 'px';
+    c.style.height = cc.h + 'px';
+    c.style.top    = cc.y + '%';
+    c.style.left   = '0';
+    c.style.setProperty('--cb',     cc.blur  + 'px');
+    c.style.setProperty('--ca',     cc.alpha);
+    c.style.setProperty('--cd',     cc.dur   + 's');
+    c.style.setProperty('--cdelay', cc.delay + 's');
+    df.appendChild(c);
+  }
+
+  // Birds — groups of V-shapes crossing the screen
+  var groups = [
+    {n:5, y:13, dur:72,  delay:-8,  scale:1.0},
+    {n:7, y:21, dur:94,  delay:-38, scale:0.82},
+    {n:4, y:9,  dur:58,  delay:-58, scale:1.12},
+    {n:6, y:17, dur:82,  delay:-22, scale:0.92},
+    {n:3, y:27, dur:105, delay:-72, scale:0.72},
+  ];
+
+  for (var gi = 0; gi < groups.length; gi++) {
+    var g = groups[gi];
+    var grp = document.createElement('div');
+    grp.className = 'bird-group';
+    grp.style.top  = g.y + '%';
+    grp.style.left = '0';
+    grp.style.setProperty('--bd',     g.dur   + 's');
+    grp.style.setProperty('--bdelay', g.delay + 's');
+
+    for (var bi = 0; bi < g.n; bi++) {
+      var bird = document.createElement('div');
+      bird.className = 'bird';
+      bird.style.marginLeft = (bi === 0 ? 0 : Math.round(Math.random() * 18 + 8)) + 'px';
+      bird.style.marginTop  = Math.round(Math.random() * 14 - 7) + 'px';
+      bird.style.setProperty('--bf',  (Math.random() * 0.45 + 0.55).toFixed(2) + 's');
+      bird.style.setProperty('--bfd', (Math.random() * 0.38).toFixed(2) + 's');
+      var sz = g.scale * (Math.random() * 8 + 13);
+      bird.innerHTML = '<svg viewBox="0 0 22 10" width="' + sz.toFixed(0) + '" height="' + (sz*0.46).toFixed(0)
+        + '" style="display:block;overflow:visible"><path d="M0,5 Q5.5,0 11,5 Q16.5,0 22,5"'
+        + ' fill="none" stroke="rgba(190,215,245,0.52)" stroke-width="1.3" stroke-linecap="round"/></svg>';
+      grp.appendChild(bird);
+    }
+    df.appendChild(grp);
+  }
+}
+
 function initSky() {
   createStars();
+  createDayField();
   applySkyTheme();
 }
 
