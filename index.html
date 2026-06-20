@@ -46,7 +46,6 @@
     body.night-dim .night-banner { display:block; }
     body.night-dim.wake .night-banner { display:none; }
 
-    /* ── BG orbs ── */
     .bg-orb {
       position:fixed; border-radius:50%; filter:blur(80px); opacity:.12;
       animation:orbFloat 20s ease-in-out infinite; pointer-events:none; z-index:0;
@@ -106,8 +105,7 @@
       -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
       filter:blur(20px); opacity:.5; z-index:-1;
     }
-    /* Colon is a SIBLING element — NOT inside the gradient-clip container.
-       This is required for opacity animation to work in Edge/older Chrome. */
+    /* Colon sits OUTSIDE the gradient-clip element so animation works in Edge */
     .time-colon-sep {
       font-family:'Orbitron',monospace;
       font-size:clamp(80px,16vw,200px);
@@ -150,60 +148,51 @@
     .day-transition { animation:dayChange .6s ease; }
     @keyframes dayChange { 0%{opacity:0;transform:translateY(-10px);} 100%{opacity:1;transform:translateY(0);} }
 
-    /* ══════════════════════════════════════════════════════════════
-       HORIZONTAL INFO STRIP  — replaces the old two-card layout
-       Each section is a flex column; all in one horizontal row.
-    ══════════════════════════════════════════════════════════════ */
+    /* ═══════════════════════════════════════════════════════════════
+       HORIZONTAL INFO STRIP — 5 columns (sunrise/sunset removed)
+    ═══════════════════════════════════════════════════════════════ */
     .info-strip {
       display:flex; align-items:stretch;
       width:100%; margin-top:12px;
       background:var(--bg-card);
       border:1px solid rgba(255,255,255,.06);
-      border-radius:22px;
-      overflow:hidden;
-      backdrop-filter:blur(12px);
-      position:relative;
+      border-radius:22px; overflow:hidden;
+      backdrop-filter:blur(12px); position:relative;
     }
-    /* subtle top-border gradient */
     .info-strip::before {
       content:''; position:absolute; top:0; left:0; right:0; height:2px;
       background:linear-gradient(90deg,var(--accent-warm),var(--accent-cyan),var(--accent-blue),var(--accent-purple));
       opacity:.5;
     }
-
-    /* vertical separator between columns */
     .info-sep {
       width:1px; flex-shrink:0;
       background:rgba(255,255,255,.07);
       margin:12px 0;
     }
-
-    /* base column */
     .info-col {
       display:flex; flex-direction:column;
       align-items:center; justify-content:center;
       padding:14px 10px; flex:1; gap:3px;
     }
-    /* micro label at top of each column */
     .col-label {
       font-size:9px; font-weight:600; letter-spacing:.22em; text-transform:uppercase;
       color:var(--text-dim); margin-bottom:2px;
     }
 
-    /* ── Temperature column ── */
-    .col-temp { flex:1.5; border-left:3px solid rgba(255,183,77,.25); }
+    /* ── Temperature column (wider) ── */
+    .col-temp { flex:1.8; border-left:3px solid rgba(255,183,77,.25); }
     .temp-row { display:flex; align-items:flex-start; gap:3px; }
     .temp-value {
       font-family:'Orbitron',monospace;
-      font-size:clamp(58px,7vw,96px);
+      font-size:clamp(64px,8vw,110px);
       font-weight:700; color:var(--accent-warm); line-height:1;
       text-shadow:0 0 30px rgba(255,183,77,.5);
     }
     .temp-unit {
-      font-family:'Orbitron',monospace; font-size:clamp(22px,2.6vw,36px);
-      font-weight:400; color:var(--accent-warm); opacity:.7; margin-top:8px;
+      font-family:'Orbitron',monospace; font-size:clamp(26px,3vw,42px);
+      font-weight:400; color:var(--accent-warm); opacity:.7; margin-top:10px;
     }
-    .feels-badge { font-size:13px; color:var(--text-secondary); letter-spacing:.04em; }
+    .feels-badge { font-size:14px; color:var(--text-secondary); letter-spacing:.04em; }
     .feels-badge span { color:var(--accent-warm); font-weight:600; }
     @keyframes tempFlash {
       0%{text-shadow:0 0 30px rgba(255,183,77,.5);}
@@ -212,81 +201,63 @@
     }
     .temp-flash { animation:tempFlash 1s ease-out; }
 
-    /* ── Condition column ── */
-    .col-cond { flex:1.3; }
+    /* ── Condition column (wider) ── */
+    .col-cond { flex:1.6; }
     .cond-icon-img {
-      width:72px; height:72px; object-fit:contain;
+      width:88px; height:88px; object-fit:contain;
       animation:iconFloat 4s ease-in-out infinite;
-      filter:drop-shadow(0 4px 12px rgba(0,0,0,0.5));
+      filter:drop-shadow(0 4px 16px rgba(0,0,0,0.5));
     }
-    @keyframes iconFloat { 0%,100%{transform:translateY(0);} 50%{transform:translateY(-6px);} }
-    .forecast-icon-img { width:30px; height:30px; object-fit:contain; }
-    .cond-label { font-size:clamp(13px,1.4vw,18px); font-weight:500; color:var(--text-primary); text-align:center; }
-    .cond-sub   { font-size:12px; color:var(--text-secondary); text-align:center; }
-    .weather-badge-h {
-      display:inline-flex; align-items:center; gap:4px;
-      font-size:11px; font-weight:500; color:var(--accent-warm);
-      background:rgba(255,183,77,.08); border:1px solid rgba(255,183,77,.18);
-      border-radius:20px; padding:2px 8px; margin-top:2px;
-    }
+    @keyframes iconFloat { 0%,100%{transform:translateY(0);} 50%{transform:translateY(-7px);} }
+    .cond-label { font-size:clamp(14px,1.6vw,20px); font-weight:500; color:var(--text-primary); text-align:center; }
+    .cond-sub   { font-size:13px; color:var(--text-secondary); text-align:center; }
 
     /* ── High / Low column ── */
-    .col-hl { flex:0.9; }
+    .col-hl { flex:1.0; }
     .hl-val {
-      font-family:'Orbitron',monospace; font-size:clamp(20px,2.2vw,30px);
+      font-family:'Orbitron',monospace; font-size:clamp(22px,2.7vw,38px);
       font-weight:700; line-height:1.2;
     }
     .hl-hi { color:#ef9a9a; }
     .hl-lo { color:#90caf9; }
-    .hl-divline { width:30px; height:1px; background:rgba(255,255,255,.12); margin:4px 0; }
-    .hl-wind { font-size:12px; color:var(--text-secondary); margin-top:4px; }
+    .hl-divline { width:30px; height:1px; background:rgba(255,255,255,.12); margin:5px 0; }
+    .hl-wind { font-size:13px; color:var(--text-secondary); margin-top:5px; }
     .hl-wind span { color:var(--accent-blue); font-weight:600; }
 
-    /* ── Sunrise / Sunset column ── */
-    .col-sun { flex:0.95; }
-    .sun-item-h {
-      display:flex; align-items:center; gap:6px;
-      font-size:clamp(13px,1.5vw,18px); color:var(--text-secondary);
-    }
-    .sun-item-h .sun-val { color:#ffd54f; font-weight:700; font-family:'Orbitron',monospace; font-size:clamp(14px,1.6vw,20px); }
-
     /* ── UV + AQI column ── */
-    .col-metrics { flex:1.1; }
+    .col-metrics { flex:1.4; }
     .metric-pill {
-      display:inline-flex; align-items:center; gap:4px;
-      font-size:12px; font-weight:600; letter-spacing:.04em;
-      border-radius:20px; padding:4px 12px; margin:3px 0;
-      white-space:nowrap;
+      display:inline-flex; align-items:center; gap:6px;
+      font-size:clamp(14px,1.6vw,20px); font-weight:600; letter-spacing:.04em;
+      border-radius:24px; padding:8px 18px; margin:4px 0; white-space:nowrap;
     }
     .mp-uv   { background:rgba(255,238,88,.1); border:1px solid rgba(255,238,88,.25); color:#fff176; }
     .mp-aqi  { background:rgba(105,240,174,.1); border:1px solid rgba(105,240,174,.25); color:#69f0ae; }
-    .mp-uv-low    { color:#a5d6a7; border:1px solid rgba(165,214,167,.25); background:rgba(165,214,167,.08); }
-    .mp-uv-mod    { color:#fff176; border:1px solid rgba(255,238,88,.25);  background:rgba(255,238,88,.08); }
-    .mp-uv-high   { color:#ffb74d; border:1px solid rgba(255,183,77,.3);   background:rgba(255,183,77,.08); }
-    .mp-uv-vhigh  { color:#ef9a9a; border:1px solid rgba(239,154,154,.3);  background:rgba(239,154,154,.08); }
-    .mp-uv-ext    { color:#b39ddb; border:1px solid rgba(179,157,219,.3);  background:rgba(179,157,219,.08); }
-    .mp-aqi-mod   { background:rgba(255,238,88,.1); border:1px solid rgba(255,238,88,.3); color:#fff176; }
-    .mp-aqi-usg   { background:rgba(255,183,77,.1); border:1px solid rgba(255,183,77,.3); color:#ffb74d; }
-    .mp-aqi-un    { background:rgba(239,154,154,.1); border:1px solid rgba(239,154,154,.3); color:#ef9a9a; }
-    .mp-aqi-vun   { background:rgba(179,157,219,.1); border:1px solid rgba(179,157,219,.3); color:#b39ddb; }
-    .mp-aqi-haz   { background:rgba(188,0,0,.2); border:1px solid rgba(255,0,0,.3); color:#ff5252; }
-    .hum-row { font-size:12px; color:var(--text-secondary); margin-top:4px; }
-    .hum-row span { color:var(--accent-warm); font-weight:600; }
+    .mp-uv-low   { color:#a5d6a7; border:1px solid rgba(165,214,167,.25); background:rgba(165,214,167,.08); }
+    .mp-uv-mod   { color:#fff176; border:1px solid rgba(255,238,88,.25);  background:rgba(255,238,88,.08); }
+    .mp-uv-high  { color:#ffb74d; border:1px solid rgba(255,183,77,.3);   background:rgba(255,183,77,.08); }
+    .mp-uv-vhigh { color:#ef9a9a; border:1px solid rgba(239,154,154,.3);  background:rgba(239,154,154,.08); }
+    .mp-uv-ext   { color:#b39ddb; border:1px solid rgba(179,157,219,.3);  background:rgba(179,157,219,.08); }
+    .mp-aqi-mod  { background:rgba(255,238,88,.1); border:1px solid rgba(255,238,88,.3); color:#fff176; }
+    .mp-aqi-usg  { background:rgba(255,183,77,.1); border:1px solid rgba(255,183,77,.3); color:#ffb74d; }
+    .mp-aqi-un   { background:rgba(239,154,154,.1); border:1px solid rgba(239,154,154,.3); color:#ef9a9a; }
+    .mp-aqi-vun  { background:rgba(179,157,219,.1); border:1px solid rgba(179,157,219,.3); color:#b39ddb; }
+    .mp-aqi-haz  { background:rgba(188,0,0,.2); border:1px solid rgba(255,0,0,.3); color:#ff5252; }
 
-    /* ── Date column ── */
-    .col-date { flex:1.2; border-right:3px solid rgba(79,195,247,.2); }
+    /* ── Date column (wider) ── */
+    .col-date { flex:1.5; border-right:3px solid rgba(79,195,247,.2); }
     .date-mo-sm {
-      font-family:'Orbitron',monospace; font-size:clamp(10px,1.1vw,14px);
+      font-family:'Orbitron',monospace; font-size:clamp(11px,1.3vw,17px);
       font-weight:400; letter-spacing:.22em; color:var(--accent-blue); opacity:.8;
       text-transform:uppercase;
     }
     .date-num-lg {
-      font-family:'Orbitron',monospace; font-size:clamp(52px,6.5vw,88px);
+      font-family:'Orbitron',monospace; font-size:clamp(58px,7.5vw,102px);
       font-weight:700; color:var(--text-primary); line-height:1;
       text-shadow:0 0 30px rgba(79,195,247,.4);
     }
     .date-ordinal { font-size:.38em; vertical-align:super; color:var(--accent-blue); font-weight:400; }
-    .date-dn { font-size:13px; color:var(--text-secondary); letter-spacing:.06em; }
+    .date-dn { font-size:14px; color:var(--text-secondary); letter-spacing:.06em; }
     .location-pill {
       display:inline-flex; align-items:center; gap:4px;
       font-size:10px; font-weight:500; letter-spacing:.07em; color:var(--accent-blue);
@@ -296,29 +267,39 @@
     }
     .location-pill:hover { background:rgba(79,195,247,.15); border-color:rgba(79,195,247,.35); }
 
-    /* ── FORECAST STRIP — horizontal cards ── */
-    .forecast-strip {
-      display:flex; align-items:stretch; justify-content:center;
-      width:100%; margin-top:10px; gap:8px;
+    /* ═══════════════════════════════════════════════════════════════
+       FORECAST BRIEF — dynamic written weather summary
+    ═══════════════════════════════════════════════════════════════ */
+    .forecast-brief {
+      display:flex; align-items:center;
+      width:100%; margin-top:10px;
+      background:var(--bg-card);
+      border:1px solid rgba(255,255,255,.07);
+      border-radius:18px; padding:14px 24px;
+      position:relative; backdrop-filter:blur(12px); overflow:hidden;
+      gap:16px; min-height:76px;
     }
-    .forecast-day {
-      flex:1; display:flex; flex-direction:row;
-      align-items:center; justify-content:space-around;
-      background:var(--bg-card); border:1px solid rgba(255,255,255,.07);
-      border-radius:16px; padding:10px 12px; gap:6px; min-height:68px;
+    .forecast-brief::before {
+      content:''; position:absolute; top:0; left:0; right:0; height:2px;
+      background:linear-gradient(90deg,var(--accent-cyan),var(--accent-blue),var(--accent-purple));
+      opacity:.4;
     }
-    .forecast-day.today { border-color:rgba(79,195,247,.3); background:rgba(79,195,247,.07); }
-    .forecast-day-name {
-      font-family:'Orbitron',monospace; font-size:11px; font-weight:700;
-      letter-spacing:.1em; color:var(--text-dim); text-transform:uppercase;
-      min-width:34px; text-align:center;
+    .brief-header {
+      font-size:9px; font-weight:600; letter-spacing:.2em; text-transform:uppercase;
+      color:var(--text-dim); white-space:nowrap; flex-shrink:0;
     }
-    .forecast-day.today .forecast-day-name { color:var(--accent-cyan); }
-    .forecast-icon { line-height:1; display:flex; align-items:center; flex-shrink:0; }
-    .forecast-icon-img { width:40px; height:40px; object-fit:contain; }
-    .fc-hl { display:flex; flex-direction:column; align-items:center; gap:1px; }
-    .forecast-hi { font-size:15px; font-weight:700; color:#ef9a9a; font-family:'Orbitron',monospace; }
-    .forecast-lo { font-size:13px; color:#90caf9; font-family:'Orbitron',monospace; }
+    .brief-items { display:flex; align-items:stretch; flex:1; gap:0; }
+    .brief-item {
+      flex:1; display:flex; align-items:center; gap:13px;
+      padding:4px 22px; border-left:1px solid rgba(255,255,255,.07);
+    }
+    .brief-item:first-child { border-left:none; padding-left:0; }
+    .brief-icon { font-size:28px; flex-shrink:0; line-height:1; }
+    .brief-text {
+      font-size:clamp(12px,1.35vw,17px); color:var(--text-secondary);
+      line-height:1.4; font-weight:400;
+    }
+    .brief-text strong { color:var(--text-primary); font-weight:600; }
 
     /* ── STATUS BAR ── */
     .status-bar {
@@ -390,6 +371,9 @@
       .info-strip{flex-wrap:wrap;}
       .info-col{min-width:45%;}
       .info-sep{display:none;}
+      .brief-items{flex-direction:column;}
+      .brief-item{border-left:none; border-top:1px solid rgba(255,255,255,.07); padding:8px 0;}
+      .brief-item:first-child{border-top:none; padding-top:0;}
     }
   </style>
 </head>
@@ -427,7 +411,7 @@
     <div class="day-display" id="dayDisplay">THURSDAY</div>
   </div>
 
-  <!-- HORIZONTAL INFO STRIP -->
+  <!-- HORIZONTAL INFO STRIP (5 columns — sunrise/sunset removed) -->
   <div class="info-strip fade-in fd2">
 
     <!-- 1. Temperature -->
@@ -445,7 +429,7 @@
     <!-- 2. Condition -->
     <div class="info-col col-cond">
       <div class="col-label">CONDITION</div>
-      <img class="cond-icon-img" id="weatherIcon" src="" alt="Weather" width="72" height="72" />
+      <img class="cond-icon-img" id="weatherIcon" src="" alt="Weather" width="88" height="88" />
       <div class="cond-label" id="weatherCondition">Loading&hellip;</div>
       <div class="cond-sub" id="tempMeta">Humidity &mdash;</div>
     </div>
@@ -463,16 +447,7 @@
 
     <div class="info-sep"></div>
 
-    <!-- 4. Sunrise / Sunset -->
-    <div class="info-col col-sun">
-      <div class="col-label">SUN</div>
-      <div class="sun-item-h">&#127749;&nbsp;<span class="sun-val" id="sunriseTime">--:--</span></div>
-      <div class="sun-item-h">&#127751;&nbsp;<span class="sun-val" id="sunsetTime">--:--</span></div>
-    </div>
-
-    <div class="info-sep"></div>
-
-    <!-- 5. UV + AQI -->
+    <!-- 4. UV + AQI -->
     <div class="info-col col-metrics">
       <div class="col-label">AIR &amp; UV</div>
       <div class="metric-pill mp-uv" id="uvPill">&#9728; UV --</div>
@@ -481,7 +456,7 @@
 
     <div class="info-sep"></div>
 
-    <!-- 6. Date -->
+    <!-- 5. Date -->
     <div class="info-col col-date">
       <div class="date-mo-sm" id="monthYear">JUNE 2026</div>
       <div class="date-num-lg" id="dayNum">19<span class="date-ordinal">th</span></div>
@@ -494,12 +469,14 @@
 
   </div><!-- .info-strip -->
 
-  <!-- 5-DAY FORECAST STRIP -->
-  <div class="forecast-strip fade-in fd3" id="forecastStrip">
-    <div class="forecast-day today">
-      <div class="forecast-day-name">TODAY</div>
-      <div class="forecast-icon"><img class="forecast-icon-img" src="" alt="" width="40" height="40" /></div>
-      <div class="fc-hl"><div class="forecast-hi">--&deg;</div><div class="forecast-lo">--&deg;</div></div>
+  <!-- FORECAST BRIEF — dynamic written 6-day outlook -->
+  <div class="forecast-brief fade-in fd3">
+    <div class="brief-header">&#9679; 6-DAY OUTLOOK</div>
+    <div class="brief-items" id="briefItems">
+      <div class="brief-item">
+        <span class="brief-icon">&#9203;</span>
+        <span class="brief-text">Analysing forecast data&hellip;</span>
+      </div>
     </div>
   </div>
 
@@ -636,30 +613,29 @@ document.body.addEventListener('click', function() {
   }, 90000);
 });
 
-// ── WMO map ───────────────────────────────────────────────────────────
-// WMO codes → label + Basmilius icon name (day/night variants)
+// ── WMO map (Basmilius icon names) ────────────────────────────────────
 var WMO = {
-  0:  {l:'Clear Sky',         d:'clear-day',                   n:'clear-night'},
-  1:  {l:'Mostly Clear',      d:'partly-cloudy-day',           n:'partly-cloudy-night'},
-  2:  {l:'Partly Cloudy',     d:'partly-cloudy-day',           n:'partly-cloudy-night'},
-  3:  {l:'Overcast',          d:'overcast-day',                n:'overcast-night'},
-  45: {l:'Foggy',             d:'fog-day',                     n:'fog-night'},
-  48: {l:'Icy Fog',           d:'fog',                         n:'fog'},
-  51: {l:'Light Drizzle',     d:'partly-cloudy-day-drizzle',   n:'partly-cloudy-night-drizzle'},
-  53: {l:'Drizzle',           d:'drizzle',                     n:'drizzle'},
-  55: {l:'Heavy Drizzle',     d:'overcast-drizzle',            n:'overcast-drizzle'},
-  61: {l:'Light Rain',        d:'partly-cloudy-day-rain',      n:'partly-cloudy-night-rain'},
-  63: {l:'Rain',              d:'rain',                        n:'rain'},
-  65: {l:'Heavy Rain',        d:'overcast-rain',               n:'overcast-rain'},
-  71: {l:'Light Snow',        d:'partly-cloudy-day-snow',      n:'partly-cloudy-night-snow'},
-  73: {l:'Snow',              d:'snow',                        n:'snow'},
-  75: {l:'Heavy Snow',        d:'overcast-snow',               n:'overcast-snow'},
-  77: {l:'Snow Grains',       d:'snow',                        n:'snow'},
-  80: {l:'Showers',           d:'partly-cloudy-day-rain',      n:'partly-cloudy-night-rain'},
-  81: {l:'Showers',           d:'rain',                        n:'rain'},
-  82: {l:'Heavy Showers',     d:'thunderstorms-day-rain',      n:'thunderstorms-night-rain'},
-  95: {l:'Thunderstorm',      d:'thunderstorms-day',           n:'thunderstorms-night'},
-  99: {l:'Hail Storm',        d:'hail',                        n:'hail'}
+  0:  {l:'Clear Sky',       d:'clear-day',                  n:'clear-night'},
+  1:  {l:'Mostly Clear',    d:'partly-cloudy-day',          n:'partly-cloudy-night'},
+  2:  {l:'Partly Cloudy',   d:'partly-cloudy-day',          n:'partly-cloudy-night'},
+  3:  {l:'Overcast',        d:'overcast-day',               n:'overcast-night'},
+  45: {l:'Foggy',           d:'fog-day',                    n:'fog-night'},
+  48: {l:'Icy Fog',         d:'fog',                        n:'fog'},
+  51: {l:'Light Drizzle',   d:'partly-cloudy-day-drizzle',  n:'partly-cloudy-night-drizzle'},
+  53: {l:'Drizzle',         d:'drizzle',                    n:'drizzle'},
+  55: {l:'Heavy Drizzle',   d:'overcast-drizzle',           n:'overcast-drizzle'},
+  61: {l:'Light Rain',      d:'partly-cloudy-day-rain',     n:'partly-cloudy-night-rain'},
+  63: {l:'Rain',            d:'rain',                       n:'rain'},
+  65: {l:'Heavy Rain',      d:'overcast-rain',              n:'overcast-rain'},
+  71: {l:'Light Snow',      d:'partly-cloudy-day-snow',     n:'partly-cloudy-night-snow'},
+  73: {l:'Snow',            d:'snow',                       n:'snow'},
+  75: {l:'Heavy Snow',      d:'overcast-snow',              n:'overcast-snow'},
+  77: {l:'Snow Grains',     d:'snow',                       n:'snow'},
+  80: {l:'Showers',         d:'partly-cloudy-day-rain',     n:'partly-cloudy-night-rain'},
+  81: {l:'Showers',         d:'rain',                       n:'rain'},
+  82: {l:'Heavy Showers',   d:'thunderstorms-day-rain',     n:'thunderstorms-night-rain'},
+  95: {l:'Thunderstorm',    d:'thunderstorms-day',          n:'thunderstorms-night'},
+  99: {l:'Hail Storm',      d:'hail',                       n:'hail'}
 };
 
 var ICON_BASE = 'https://cdn.jsdelivr.net/gh/basmilius/weather-icons@dev/production/fill/svg/';
@@ -700,7 +676,7 @@ function fetchWeather() {
   var wUrl = 'https://api.open-meteo.com/v1/forecast'
     + '?latitude=' + activeLat + '&longitude=' + activeLon
     + '&current=temperature_2m,apparent_temperature,weathercode,relative_humidity_2m,wind_speed_10m'
-    + '&daily=weathercode,temperature_2m_max,temperature_2m_min,sunrise,sunset,uv_index_max'
+    + '&daily=weathercode,temperature_2m_max,temperature_2m_min,uv_index_max'
     + '&temperature_unit=celsius&wind_speed_unit=kmh&timezone=auto&forecast_days=6';
 
   var aUrl = 'https://air-quality-api.open-meteo.com/v1/air-quality'
@@ -716,9 +692,8 @@ function fetchWeather() {
       var code   = getWmoCode(cur);
       var humid  = cur.relative_humidity_2m;
       var wind   = Math.round(cur.wind_speed_10m);
-      var wmo    = WMO[code] || {l:'Unknown', i:'🌡️'};
+      var wmo    = WMO[code] || {l:'Unknown', d:'clear-day', n:'clear-night'};
 
-      // Temperature
       var tEl = document.getElementById('tempValue');
       if (prevTemp !== null && prevTemp !== tempC) {
         animateNumber(tEl, prevTemp, tempC, 800);
@@ -742,11 +717,8 @@ function fetchWeather() {
         document.getElementById('hlHigh').textContent = '\u2191 ' + Math.round(daily.temperature_2m_max[0]) + '\u00b0';
         document.getElementById('hlLow').textContent  = '\u2193 ' + Math.round(daily.temperature_2m_min[0]) + '\u00b0';
 
-        document.getElementById('sunriseTime').textContent = fmtTime(daily.sunrise && daily.sunrise[0]);
-        document.getElementById('sunsetTime').textContent  = fmtTime(daily.sunset  && daily.sunset[0]);
-
         setUV(daily.uv_index_max ? daily.uv_index_max[0] : null);
-        populateForecast(daily);
+        updateForecastBrief(daily);
       }
 
       var now2 = new Date();
@@ -766,15 +738,6 @@ function fetchWeather() {
       setAQI(aqi);
     })
     .catch(function() { setAQI(null); });
-}
-
-function fmtTime(iso) {
-  if (!iso) return '--:--';
-  try {
-    var d = new Date(iso);
-    var hh = d.getHours(), mm = d.getMinutes();
-    return (hh < 10 ? '0'+hh : hh) + ':' + (mm < 10 ? '0'+mm : mm);
-  } catch(e) { return '--:--'; }
 }
 
 function setUV(uv) {
@@ -797,36 +760,136 @@ function setAQI(aqi) {
   if (v > 300)      { cls = 'mp-aqi-haz'; label = 'Hazardous'; }
   else if (v > 200) { cls = 'mp-aqi-vun'; label = 'Very Unhealthy'; }
   else if (v > 150) { cls = 'mp-aqi-un';  label = 'Unhealthy'; }
-  else if (v > 100) { cls = 'mp-aqi-usg'; label = 'Unhlthy SG'; }
+  else if (v > 100) { cls = 'mp-aqi-usg'; label = 'Unhealthy\u00b7SG'; }
   else if (v > 50)  { cls = 'mp-aqi-mod'; label = 'Moderate'; }
   else              { cls = 'mp-aqi';     label = 'Good'; }
   el.textContent = 'AQI ' + v + ' \u00b7 ' + label;
   el.className = 'metric-pill ' + cls;
 }
 
-function populateForecast(daily) {
-  var strip = document.getElementById('forecastStrip');
-  strip.innerHTML = '';
-  var today = new Date();
-  var shortDay = ['SUN','MON','TUE','WED','THU','FRI','SAT'];
-  var codes = daily.weather_code || daily.weathercode || [];
-
-  for (var i = 0; i < 6; i++) {
-    var d2 = new Date(today);
-    d2.setDate(d2.getDate() + i);
-    var code2 = codes[i] || 0;
-    var hi = daily.temperature_2m_max ? Math.round(daily.temperature_2m_max[i]) : '-';
-    var lo = daily.temperature_2m_min ? Math.round(daily.temperature_2m_min[i]) : '-';
-    var wmo2 = WMO[code2] || {i:'🌡️'};
-    var card = document.createElement('div');
-    card.className = 'forecast-day' + (i === 0 ? ' today' : '');
-    card.innerHTML = '<div class="forecast-day-name">' + (i === 0 ? 'TODAY' : shortDay[d2.getDay()]) + '</div>'
-      + '<div class="forecast-icon"><img class="forecast-icon-img" src="' + getIconUrl(wmo2, true) + '" alt="' + (wmo2.l || '') + '" width="40" height="40" /></div>'
-      + '<div class="fc-hl"><div class="forecast-hi">' + hi + '&deg;</div><div class="forecast-lo">' + lo + '&deg;</div></div>';
-    strip.appendChild(card);
+// ── Dynamic forecast brief ────────────────────────────────────────────
+function updateForecastBrief(daily) {
+  var items = generateForecastSummary(daily);
+  var container = document.getElementById('briefItems');
+  if (!container) return;
+  container.innerHTML = '';
+  for (var j = 0; j < items.length; j++) {
+    var div = document.createElement('div');
+    div.className = 'brief-item';
+    div.innerHTML = '<span class="brief-icon">' + items[j].icon + '</span>'
+      + '<span class="brief-text">' + items[j].text + '</span>';
+    container.appendChild(div);
   }
 }
 
+function generateForecastSummary(daily) {
+  var codes = daily.weather_code || daily.weathercode || [];
+  var highs = daily.temperature_2m_max || [];
+  var today = new Date();
+  var dayNames = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+
+  function dayLabel(offset) {
+    if (offset === 1) return 'tomorrow';
+    var d = new Date(today); d.setDate(d.getDate() + offset);
+    return dayNames[d.getDay()];
+  }
+
+  // ── Insight 1: Temperature trend ──────────────────────────────────
+  var todayHi = Math.round(highs[0] || 0);
+  var peakVal = todayHi, peakIdx = 0;
+  var troughVal = todayHi, troughIdx = 0;
+  for (var i = 1; i < highs.length; i++) {
+    var v = Math.round(highs[i]);
+    if (v > peakVal)    { peakVal = v;    peakIdx = i; }
+    if (v < troughVal)  { troughVal = v;  troughIdx = i; }
+  }
+  var endHi = Math.round(highs[highs.length - 1] || todayHi);
+  var trend = endHi - todayHi;
+  var days = highs.length - 1;
+
+  var t1, i1;
+  if (Math.abs(trend) < 2) {
+    i1 = '&#127777;&#65039;';
+    t1 = 'Temperatures <strong>steady</strong> around ' + todayHi + '&deg;C this week';
+  } else if (trend > 0) {
+    i1 = '&#128200;';
+    t1 = 'Warming <strong>+' + trend + '&deg;</strong> over ' + days + ' days';
+    if (peakIdx > 0 && peakIdx < highs.length - 1)
+      t1 += ' &mdash; peaks at <strong>' + peakVal + '&deg;</strong> ' + dayLabel(peakIdx);
+  } else {
+    i1 = '&#128201;';
+    t1 = 'Cooling <strong>' + trend + '&deg;</strong> over ' + days + ' days';
+    if (troughIdx > 0 && troughIdx < highs.length - 1)
+      t1 += ' &mdash; low of <strong>' + troughVal + '&deg;</strong> ' + dayLabel(troughIdx);
+  }
+
+  // ── Insight 2: Precipitation ─────────────────────────────────────
+  var rainDays = [], stormDays = [], snowDays = [];
+  for (var i = 1; i < codes.length; i++) {
+    var code = codes[i] || 0;
+    if (code >= 95) stormDays.push(dayLabel(i));
+    else if (code >= 71 && code <= 77) snowDays.push(dayLabel(i));
+    else if (code >= 51) rainDays.push(dayLabel(i));
+  }
+
+  var t2, i2;
+  if (stormDays.length > 0) {
+    i2 = '&#9928;&#65039;';
+    t2 = '<strong>Storms</strong> expected ' + stormDays.join(', ');
+    if (rainDays.length > 0) t2 += ' &bull; rain also ' + rainDays.join(', ');
+  } else if (snowDays.length > 0) {
+    i2 = '&#10052;&#65039;';
+    t2 = '<strong>Snow</strong> forecast ' + snowDays.join(' &amp; ');
+  } else if (rainDays.length >= 3) {
+    i2 = '&#127783;&#65039;';
+    t2 = 'Rainy spell ahead &mdash; <strong>' + rainDays.length + ' wet days</strong>'
+      + ' (' + rainDays[0] + ' through ' + rainDays[rainDays.length - 1] + ')';
+  } else if (rainDays.length === 2) {
+    i2 = '&#127782;&#65039;';
+    t2 = '<strong>Rain likely</strong> ' + rainDays[0] + ' and ' + rainDays[1];
+  } else if (rainDays.length === 1) {
+    i2 = '&#127782;&#65039;';
+    t2 = 'Rain possible <strong>' + rainDays[0] + '</strong> &mdash; dry otherwise';
+  } else {
+    i2 = '&#9728;&#65039;';
+    t2 = '<strong>No rain</strong> expected &mdash; dry conditions for ' + days + ' days';
+  }
+
+  // ── Insight 3: Overall outlook / temperature range ────────────────
+  var allHi = [], clearCnt = 0;
+  for (var i = 0; i < highs.length; i++) allHi.push(Math.round(highs[i]));
+  for (var i = 1; i < codes.length; i++) { if ((codes[i] || 0) <= 1) clearCnt++; }
+  var minHi = Math.min.apply(null, allHi);
+  var maxHi = Math.max.apply(null, allHi);
+  var spread = maxHi - minHi;
+  var wetDays = rainDays.length + stormDays.length + snowDays.length;
+
+  var t3, i3;
+  if (spread >= 8) {
+    i3 = '&#128202;';
+    t3 = 'Wide swing this week &mdash; highs ranging from <strong>' + minHi + '&deg; to ' + maxHi + '&deg;</strong>';
+  } else if (clearCnt >= 4) {
+    i3 = '&#127780;&#65039;';
+    t3 = 'Predominantly sunny &mdash; <strong>' + clearCnt + ' clear days</strong> in the outlook';
+  } else if (wetDays >= 3) {
+    i3 = '&#127746;';
+    t3 = 'Unsettled stretch &mdash; highs mostly <strong>' + minHi + '&ndash;' + maxHi + '&deg;C</strong>';
+  } else if (spread < 3) {
+    i3 = '&#9925;';
+    t3 = 'Consistent conditions &mdash; highs holding <strong>near ' + Math.round((minHi+maxHi)/2) + '&deg;C</strong>';
+  } else {
+    i3 = '&#9925;';
+    t3 = 'Mixed week ahead &mdash; highs <strong>' + minHi + '&deg; to ' + maxHi + '&deg;C</strong>';
+  }
+
+  return [
+    { icon: i1, text: t1 },
+    { icon: i2, text: t2 },
+    { icon: i3, text: t3 }
+  ];
+}
+
+// ── Animate number ────────────────────────────────────────────────────
 function animateNumber(el, from, to, duration) {
   var start = null;
   function step(ts) {
@@ -839,7 +902,7 @@ function animateNumber(el, from, to, duration) {
   requestAnimationFrame(step);
 }
 
-// ── Location & geolocation ────────────────────────────────────────────
+// ── Location ──────────────────────────────────────────────────────────
 function applyLocation(lat, lon, city) {
   activeLat = lat; activeLon = lon; activeCity = city; prevTemp = null;
   document.getElementById('locationText').textContent = city;
