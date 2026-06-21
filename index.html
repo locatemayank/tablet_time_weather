@@ -1003,18 +1003,7 @@ function generateForecastSummary(daily) {
   else if(rainDays.length===2){i2='&#127782;&#65039;';t2='<strong>Rain likely</strong> '+rainDays[0]+' and '+rainDays[1];}
   else if(rainDays.length===1){i2='&#127782;&#65039;';t2='Rain possible <strong>'+rainDays[0]+'</strong> &mdash; dry otherwise';}
   else{i2='&#9728;&#65039;';t2='<strong>No rain</strong> expected &mdash; dry conditions for '+days+' days';}
-  var allHi=[],clearCnt=0;
-  for(var i=0;i<highs.length;i++)allHi.push(Math.round(highs[i]));
-  for(var i=1;i<codes.length;i++){if((codes[i]||0)<=1)clearCnt++;}
-  var minHi=Math.min.apply(null,allHi),maxHi=Math.max.apply(null,allHi),spread=maxHi-minHi;
-  var wetDays=rainDays.length+stormDays.length+snowDays.length;
-  var t3,i3;
-  if(spread>=8){i3='&#128202;';t3='Wide swing this week &mdash; highs <strong>'+minHi+'&deg; to '+maxHi+'&deg;</strong>';}
-  else if(clearCnt>=4){i3='&#127780;&#65039;';t3='Predominantly sunny &mdash; <strong>'+clearCnt+' clear days</strong> in the outlook';}
-  else if(wetDays>=3){i3='&#127746;';t3='Unsettled stretch &mdash; highs mostly <strong>'+minHi+'&ndash;'+maxHi+'&deg;C</strong>';}
-  else if(spread<3){i3='&#9925;';t3='Consistent conditions &mdash; highs near <strong>'+Math.round((minHi+maxHi)/2)+'&deg;C</strong>';}
-  else{i3='&#9925;';t3='Mixed week ahead &mdash; highs <strong>'+minHi+'&deg; to '+maxHi+'&deg;C</strong>';}
-  return [{icon:i1,text:t1},{icon:i2,text:t2},{icon:i3,text:t3}];
+  return [{icon:i1,text:t1},{icon:i2,text:t2}];
 }
 
 function animateNumber(el, from, to, duration) {
